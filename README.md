@@ -27,13 +27,6 @@ tbd
 
 tbd
 
-## Credits
-
-This project was created by:
-
-- D.Houghton, licensed therapist
-- S.Whiting, unlicensed developer
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE] file for details..
