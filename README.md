@@ -1,5 +1,3 @@
-Here is a possible README.md file for your project:
-
 # Therapy Notes Analyzer
 
 This project aims to analyze raw therapy notes, process them using various AI tools and generate useful output such as therapy notes and treatment summaries in SOAP (Subjective,Objective,Assessment,Plan) format consistent with the DSM-5 and Wiley Treatment Planner.
