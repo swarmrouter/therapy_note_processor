@@ -1,1 +1,6 @@
-SYSTEM_PROMPT: Please write a poem about a puppy
+log_file: "therapy_notes_processor.log"
+input_dir: "input"
+output_dir: "output"
+azure_endpoint: "https://azure-openai-service.com/api"
+system_prompt: "This is a system prompt for processing therapy notes. Please activate the following knowledge domains: psychology, counseling, communication, writing."
+session_prompt: "This is a session prompt for processing a therapy note. Please extract the following information from the session note: client name, therapist name, session date, session summary, session goals, session interventions, session outcomes, session plan. Please generate an email document and a SOAP document based on the extracted information. The email document should be addressed to the client and summarize the session and the next steps. The SOAP document should follow the standard format of Subjective, Objective, Assessment, and Plan."
