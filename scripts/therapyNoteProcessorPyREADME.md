@@ -1,5 +1,3 @@
-Sure, here is a simple README.md for the script:
-
 # Therapy Note Processor
 
 This is a Python script that helps therapists process their therapy notes using the SOAP format. It also generates an email document that summarizes the session and provides recommendations for the next steps. The script uses either the OpenAI API or the Azure OpenAI Service to generate the documents from the session notes.
