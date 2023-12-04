@@ -39,8 +39,6 @@ The YAML file "therapy_notes_processor.yaml" contains the following configuratio
 - `system_prompt`: The system prompt for the AI service
 - `session_prompt`: The session prompt for the AI service
 
-See the example file "therapy_notes_processor.yaml" for more details.
-
 ## Usage
 
 To run the script, use the following command:
