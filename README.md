@@ -20,14 +20,6 @@ Current features in development:
 - A pipeline that processes the raw therapy notes using various AI tools and generates the output in SOAP format
 - [Therapy Notes Processor](https://github.com/swarmrouter/therapy_note_processor/blob/9fc7a3e0cd224436927d7b75009b986c7a4d4691/scripts/therapyNoteProcessorPyREADME.md)
 
-## Installation
-
-tbd
-
-## Usage
-
-tbd
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE] file for details..
