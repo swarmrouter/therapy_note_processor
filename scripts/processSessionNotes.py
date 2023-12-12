@@ -12,6 +12,8 @@ from openai import AzureOpenAI # Azure OpenAI Service module
 CONFIG_FILE = "./therapy_note_processor.yaml" # The name of the configuration file
 
 # Define the functions
+
+# Load the configuration from the YAML file
 def load_config():
     """Load the configuration from the YAML file."""
     # Open the YAML file
@@ -30,20 +32,24 @@ def get_ai_client():
     return o_ai_client
 
 # Execute ai prompt and return result text
-def runPrompt(o_ai_client):
+#def runPrompt(o_ai_client,session_note_text):
+def runPrompt(session_note_text):
     # load configuration
     config = load_config()
     systemPrompt = config['system_prompt']
     sessionPrompt = config['session_prompt']
-    completion = o_ai_client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": systemPrompt},
-            {"role": "user", "content": sessionPrompt}
-        ]
-    )
-    response = completion.choices[0].message
-    return response
+    sessionPrompt = sessionPrompt + " " + session_note_text
+    print("\nSESSION_PROMPT: "+sessionPrompt+"\n")
+    exit
+    #completion = o_ai_client.chat.completions.create(
+    #    model="gpt-3.5-turbo",
+    #    messages=[
+    #        {"role": "system", "content": systemPrompt},
+    #        {"role": "user", "content": sessionPrompt}
+    #    ]
+    #)
+    #response = completion.choices[0].message
+    #return response
 
 class SessionNote:
 
@@ -96,6 +102,7 @@ def extract_session_notes():
     return session_notes
 
 def main():
+
     # get session note contents
     session_notes = extract_session_notes()
 
@@ -103,10 +110,10 @@ def main():
         print("file name: "+session_note.file_name+"\n")
         print("session note: "+session_note.note_text+"#####\n")
 
-    exit
-
-    #o_ai_client=get_ai_client()
-    #ai_response = runPrompt(o_ai_client)
-    #print(ai_response)
+        session_note_text = session_note.note_text
+        #o_ai_client=get_ai_client()
+        #ai_response = runPrompt(o_ai_client,session_note_text)
+        ai_response = runPrompt(session_note_text)
+        #print(ai_response)
 
 main()
