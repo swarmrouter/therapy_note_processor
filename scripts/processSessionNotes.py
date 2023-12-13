@@ -32,24 +32,23 @@ def get_ai_client():
     return o_ai_client
 
 # Execute ai prompt and return result text
-#def runPrompt(o_ai_client,session_note_text):
-def runPrompt(session_note_text):
+def runPrompt(o_ai_client,session_note_text):
     # load configuration
     config = load_config()
     systemPrompt = config['system_prompt']
     sessionPrompt = config['session_prompt']
     sessionPrompt = sessionPrompt + " " + session_note_text
+    print("\nSYSTEM_PROMPT: "+systemPrompt+"\n")
     print("\nSESSION_PROMPT: "+sessionPrompt+"\n")
-    exit
-    #completion = o_ai_client.chat.completions.create(
-    #    model="gpt-3.5-turbo",
-    #    messages=[
-    #        {"role": "system", "content": systemPrompt},
-    #        {"role": "user", "content": sessionPrompt}
-    #    ]
-    #)
-    #response = completion.choices[0].message
-    #return response
+    completion = o_ai_client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": systemPrompt},
+            {"role": "user", "content": sessionPrompt}
+        ]
+    )
+    response = completion.choices[0].message
+    return response
 
 class SessionNote:
 
@@ -111,9 +110,8 @@ def main():
         print("session note: "+session_note.note_text+"#####\n")
 
         session_note_text = session_note.note_text
-        #o_ai_client=get_ai_client()
-        #ai_response = runPrompt(o_ai_client,session_note_text)
-        ai_response = runPrompt(session_note_text)
-        #print(ai_response)
+        o_ai_client=get_ai_client()
+        ai_response = runPrompt(o_ai_client,session_note_text)
+        print(ai_response)
 
 main()
