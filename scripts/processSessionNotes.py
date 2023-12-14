@@ -7,7 +7,6 @@ import yaml
 import re
 import fitz # PyMuPDF module
 from openai import OpenAI # OpenAI API module
-from openai import AzureOpenAI # Azure OpenAI Service module
 
 CONFIG_FILE = "./therapy_note_processor.yaml" # The name of the configuration file
 
