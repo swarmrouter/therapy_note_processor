@@ -41,7 +41,8 @@ def runPrompt(o_ai_client,session_note_text):
     print("\nSYSTEM_PROMPT: "+systemPrompt+"\n")
     print("\nSESSION_PROMPT: "+sessionPrompt+"\n")
     completion = o_ai_client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        #model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": systemPrompt},
             {"role": "user", "content": sessionPrompt}
@@ -61,6 +62,19 @@ class SessionNote:
     def __str__(self):
         """Return a string representation of a session note."""
         return f"Session note from file {self.file_name}:\n{self.note_text}"
+
+    def writeToFile(self,config,output_ai_text):
+
+        output_dir = config['output_dir']
+        output_filename = self.file_name
+        output_note = self.note_text
+        output_suffix = ".tsoap"
+
+        filePath = output_dir + "/" + output_filename + output_suffix 
+        with open(filePath,"w") as file:
+            file.write(output_ai_text)
+            file.write("\n\n#############\n\n")
+            file.write(output_note)
 
 def extract_session_notes():
     # load configuration
@@ -100,10 +114,12 @@ def extract_session_notes():
     # Return the list of session notes
     return session_notes
 
+
 def main():
 
     # get session note contents
     session_notes = extract_session_notes()
+    config = load_config()
 
     for session_note in session_notes:
         print("file name: "+session_note.file_name+"\n")
@@ -111,7 +127,9 @@ def main():
 
         session_note_text = session_note.note_text
         o_ai_client=get_ai_client()
-        ai_response = runPrompt(o_ai_client,session_note_text)
-        print(ai_response)
+        ai_response_text = runPrompt(o_ai_client,session_note_text)
+        print(ai_response_text)
+
+        session_note.writeToFile(config,ai_response_text)
 
 main()
