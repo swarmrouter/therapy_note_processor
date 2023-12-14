@@ -22,4 +22,4 @@ Current features in development:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE] file for details..
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/swarmrouter/therapy_note_processor/blob/main/LICENSE.md) file for details..
