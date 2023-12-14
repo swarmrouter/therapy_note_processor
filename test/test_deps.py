@@ -7,4 +7,4 @@ import yaml
 import fitz # PyMuPDF module
 import re
 from openai import OpenAI # OpenAI API module
-from openai import AzureOpenAI # Azure OpenAI Service module
+#from openai import AzureOpenAI # Azure OpenAI Service module
