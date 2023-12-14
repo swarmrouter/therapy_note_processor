@@ -48,7 +48,7 @@ def runPrompt(o_ai_client,session_note_text):
         ]
     )
     response = completion.choices[0].message
-    return response
+    return response.content
 
 class SessionNote:
 
