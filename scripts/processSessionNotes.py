@@ -111,9 +111,10 @@ def extract_session_notes():
             session_note.note_text = session_note_text
             # Append the session note object to the list
             session_notes.append(session_note)
+            # remove the original notes file
+            os.unlink(file_path)
     # Return the list of session notes
     return session_notes
-
 
 def main():
 
