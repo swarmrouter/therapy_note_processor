@@ -1,6 +1,6 @@
 # Therapy Notes Analyzer
 
-This project aims to analyze raw therapy notes provided as hand written notes in PDF files, process them using various AI tools and generate useful output such as therapy notes and treatment summaries in SOAP (Subjective,Objective,Assessment,Plan) format consistent with the DSM-5 and Wiley Treatment Planner.
+This project aims to analyze and process raw therapy notes them various AI tools and generate useful output such as therapy notes and treatment summaries in SOAP (Subjective,Objective,Assessment,Plan) format consistent with the DSM-5 and the Wiley Treatment Planner.
 
 ## Motivation
 
@@ -17,7 +17,7 @@ This project seeks to address these challenges by using AI tools to automate and
 
 Current features in development:
 
-- [Therapy Notes Processor](https://github.com/swarmrouter/therapy_note_processor/blob/main/scripts/processSessionNotesPyREADME.md)
+- [Process hand written notes (PDF)](https://github.com/swarmrouter/therapy_note_processor/blob/main/scripts/processSessionNotesPyREADME.md)
 
 ## License
 
