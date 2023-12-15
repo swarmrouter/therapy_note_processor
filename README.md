@@ -17,7 +17,6 @@ This project seeks to address these challenges by using AI tools to automate and
 
 Current features in development:
 
-- A pipeline that processes the raw therapy notes using various AI tools and generates the output in SOAP format
 - [Therapy Notes Processor](https://github.com/swarmrouter/therapy_note_processor/blob/main/scripts/processSessionNotesPyREADME.md)
 
 ## License
