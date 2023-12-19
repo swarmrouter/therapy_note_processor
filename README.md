@@ -15,9 +15,11 @@ This project seeks to address these challenges by using AI tools to automate and
 
 ## Features
 
+- [Process hand written notes (PDF)](https://github.com/swarmrouter/therapy_note_processor/blob/main/scripts/processSessionNotesPyREADME.md)
+
 Current features in development:
 
-- [Process hand written notes (PDF)](https://github.com/swarmrouter/therapy_note_processor/blob/main/scripts/processSessionNotesPyREADME.md)
+- Client email text automation - resource selection based on session context
 
 ## License
 
