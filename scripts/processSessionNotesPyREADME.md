@@ -1,6 +1,6 @@
 # Therapy Note Processor
 
-This is a Python script that helps therapists process their therapy notes using the SOAP format. It also generates an email document that summarizes the session and provides recommendations for the next steps. The script uses the OpenAI API to generate the documents from the session notes.
+This is a Python script that helps therapists process their therapy notes using the SOAP format. It also generates an email document that summarizes the session and provides recommendations for the next steps. The script uses the OpenAI API to generate the documents from the session notes. Input pdf and SOAP output examples are [documented here](https://github.com/swarmrouter/therapy_note_processor/blob/main/docs/README.md)
 
 ## Requirements
 
