@@ -5,6 +5,8 @@ import sys
 import os
 import yaml
 import re
+import json
+import time
 import fitz # PyMuPDF module
 from openai import OpenAI # OpenAI API module
 
@@ -30,7 +32,7 @@ def get_ai_client():
     o_ai_client=OpenAI(api_key=apiKey)
     return o_ai_client
 
-# Execute ai prompt and return result text
+# Execute ai soap prompt and return result text
 def runPrompt(o_ai_client,session_note_text):
     # load configuration
     config = load_config()
@@ -41,7 +43,7 @@ def runPrompt(o_ai_client,session_note_text):
     print("\nSESSION_PROMPT: "+sessionPrompt+"\n")
     completion = o_ai_client.chat.completions.create(
         #model="gpt-3.5-turbo",
-        model="gpt-4",
+        model = soap_analysis_model,
         messages=[
             {"role": "system", "content": systemPrompt},
             {"role": "user", "content": sessionPrompt}
@@ -50,13 +52,98 @@ def runPrompt(o_ai_client,session_note_text):
     response = completion.choices[0].message
     return response.content
 
+# Execute follow up email generation assistant
+def runEmailAssistant(o_ai_client,session):
+
+    config = load_config()
+    ai_prompt_p1 = config['assistant_prompt_p1']
+    ai_prompt_p2 = config['assistant_prompt_p2']
+    email_assistant_model = config['email_assistant_model']
+
+    with open("./note_tmp","w") as file:
+        file.write(session.note_text)
+
+    notes_file = o_ai_client.files.create(
+        file=open("./note_tmp", "rb"),
+        purpose='assistants'
+    )
+
+    ai_assistant_prompt = ai_prompt_p1 + notes_file.id + ai_prompt_p2
+
+    print("ai assistant prompt: " + ai_assistant_prompt)
+
+    my_assistant = o_ai_client.beta.assistants.create(
+            name = "Follow Up Email Assistant",
+            instructions = ai_assistant_prompt,
+            model = email_assistant_model,
+            tools=[{"type": "code_interpreter"}],
+            file_ids=["file-PXgPJVpZKQ7UeuDCrJjaO1l4",notes_file.id]
+    )
+
+    my_thread = o_ai_client.beta.threads.create(
+        messages=[
+            {
+                "role":"user",
+                "content": config['assistant_run_prompt']
+            }
+        ]
+    )
+
+    run = o_ai_client.beta.threads.runs.create(
+        thread_id=my_thread.id,
+        assistant_id=my_assistant.id
+    )
+
+    print(run)
+    time.sleep(5)
+    while(run.status != "completed"):
+        print("Run not completed: " + run.status)
+        time.sleep(5)
+        run = o_ai_client.beta.threads.runs.retrieve(
+            thread_id=run.thread_id,
+            run_id=run.id
+        )    
+
+        print(run.status)
+        print(run)
+
+    messages = o_ai_client.beta.threads.messages.list(
+        thread_id = my_thread.id
+    )
+
+    print(messages)
+    message_text = ""
+    for message in messages:
+        print("thread: ")
+        print(message.content[0].text.value)
+        message_text += message.content[0].text.value
+
+    notes_file_delete_status = o_ai_client.beta.assistants.files.delete(
+        assistant_id=my_assistant.id,
+        file_id=notes_file.id
+    )
+
+    # remove tmp note file
+    os.unlink("./note_tmp")
+
+    print(notes_file_delete_status)
+
+    assistant_delete_status = o_ai_client.beta.assistants.delete(
+        assistant_id=my_assistant.id
+    )
+
+    #print("ai_response: " + message_text)
+    return message_text
+
+
 class SessionNote:
 
-    def __init__(self, file_name, file_path, note_text):
+    def __init__(self, file_name, file_path, note_text, note_type):
         """Initialize the attributes of a session note."""
         self.file_name = file_name # The name of the file containing the session note
         self.file_path = file_path # The path of the file containing the session note
         self.note_text = note_text # The text of the session note
+        self.note_type = note_type # The type of the session note
 
     def __str__(self):
         """Return a string representation of a session note."""
@@ -67,7 +154,10 @@ class SessionNote:
         output_dir = config['output_dir']
         output_filename = self.file_name
         output_note = self.note_text
-        output_suffix = ".tsoap"
+        if (self.note_type == 'soap'):
+            output_suffix = ".tsoap"
+        else:
+            output_suffix = ".email"
 
         filePath = output_dir + "/" + output_filename + output_suffix 
         with open(filePath,"w") as file:
@@ -75,10 +165,15 @@ class SessionNote:
             file.write("\n\n#############\n\n")
             file.write(output_note)
 
-def extract_session_notes():
+def extract_session_notes(note_type):
     # load configuration
     config = load_config()
-    input_dir = config['input_dir']
+    if (note_type == "email"):
+        input_dir = config['input_dir_email']
+    else:
+        note_type = "soap"
+        input_dir = config['input_dir']
+    
     # Create an empty list to store the session notes
     session_notes = []
     p = re.compile(r'\s+')
@@ -100,7 +195,8 @@ def extract_session_notes():
             session_note = SessionNote(
                 file_name=file_name,
                 file_path=file_path,
-                note_text=note_text
+                note_text=note_text,
+                note_type=note_type
             )
 
             # filter out white space and new lines 
@@ -117,19 +213,32 @@ def extract_session_notes():
 
 def main():
 
-    # get session note contents
-    session_notes = extract_session_notes()
+    # get contents of session notes
+    session_notes = extract_session_notes("soap")
+    session_email_notes = extract_session_notes("email")
     config = load_config()
+    o_ai_client=get_ai_client()
 
+    # generate SOAP notes for sessions
     for session_note in session_notes:
         print("file name: "+session_note.file_name+"\n")
         print("session note: "+session_note.note_text+"#####\n")
+        print("session note type: "+session_note.note_type+"#####\n")
 
         session_note_text = session_note.note_text
-        o_ai_client=get_ai_client()
         ai_response_text = runPrompt(o_ai_client,session_note_text)
         print(ai_response_text)
 
         session_note.writeToFile(config,ai_response_text)
+
+    # generate resource EMAIL for sessions
+    for session_email_note in session_email_notes:
+        print("file name: "+session_email_note.file_name+"\n")
+        print("session note: "+session_email_note.note_text+"#####\n")
+        print("session note type: "+session_email_note.note_type+"#####\n")
+
+        ai_response_text = runEmailAssistant(o_ai_client,session_email_note)
+        print(ai_response_text)
+        session_email_note.writeToFile(config,ai_response_text)
 
 main()
