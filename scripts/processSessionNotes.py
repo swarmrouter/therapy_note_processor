@@ -77,7 +77,7 @@ def runEmailAssistant(o_ai_client,session):
             instructions = ai_assistant_prompt,
             model = email_assistant_model,
             tools=[{"type": "code_interpreter"}],
-            file_ids=["file-PXgPJVpZKQ7UeuDCrJjaO1l4",notes_file.id]
+            file_ids=[<<resources file id>>,notes_file.id]
     )
 
     my_thread = o_ai_client.beta.threads.create(
