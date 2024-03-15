@@ -58,6 +58,8 @@ def runEmailAssistant(o_ai_client,session):
     config = load_config()
     ai_prompt_p1 = config['assistant_prompt_p1']
     ai_prompt_p2 = config['assistant_prompt_p2']
+    ai_prompt_p3 = config['assistant_prompt_p3']
+    resource_file_id = config['resource_file_id']
     email_assistant_model = config['email_assistant_model']
 
     with open("./note_tmp","w") as file:
@@ -68,16 +70,17 @@ def runEmailAssistant(o_ai_client,session):
         purpose='assistants'
     )
 
-    ai_assistant_prompt = ai_prompt_p1 + notes_file.id + ai_prompt_p2
+    ai_assistant_prompt = ai_prompt_p1 + resource_file_id + ai_prompt_p2 + notes_file.id + ai_prompt_p3
 
     print("ai assistant prompt: " + ai_assistant_prompt)
+    exit()
 
     my_assistant = o_ai_client.beta.assistants.create(
             name = "Follow Up Email Assistant",
             instructions = ai_assistant_prompt,
             model = email_assistant_model,
             tools=[{"type": "code_interpreter"}],
-            file_ids=[<<resources file id>>,notes_file.id]
+            file_ids=[resource_file_id,notes_file.id]
     )
 
     my_thread = o_ai_client.beta.threads.create(

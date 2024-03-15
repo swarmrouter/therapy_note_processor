@@ -1,0 +1,18 @@
+[
+  {
+    "resource_id": "R1",
+    "url": "https://url/1",
+    "type": "video",
+    "title": "Trauma",
+    "actual_title": "Trauma Video Title",
+    "classifications": ["trauma"]
+  },
+  {
+    "resource_id": "R2",
+    "url": "https://url/2",
+    "type": "article",
+    "title": "EMDR",
+    "actual_title": "EMDR for Trauma Article Title",
+    "classifications": ["trauma", "emdr"]
+  }
+]
