@@ -38,6 +38,7 @@ def runPrompt(o_ai_client,session_note_text):
     config = load_config()
     systemPrompt = config['system_prompt']
     sessionPrompt = config['session_prompt']
+    soap_analysis_model = config['soap_analysis_model']
     sessionPrompt = sessionPrompt + " " + session_note_text
     print("\nSYSTEM_PROMPT: "+systemPrompt+"\n")
     print("\nSESSION_PROMPT: "+sessionPrompt+"\n")
@@ -73,7 +74,6 @@ def runEmailAssistant(o_ai_client,session):
     ai_assistant_prompt = ai_prompt_p1 + resource_file_id + ai_prompt_p2 + notes_file.id + ai_prompt_p3
 
     print("ai assistant prompt: " + ai_assistant_prompt)
-    exit()
 
     my_assistant = o_ai_client.beta.assistants.create(
             name = "Follow Up Email Assistant",
